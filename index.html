@@ -1250,7 +1250,13 @@ function filterAlimenti(q) {
 // SERVICE WORKER
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    // Funziona sia in locale che su GitHub Pages
+    const swPath = location.pathname.includes('dieta-antonio') 
+      ? '/dieta-antonio/sw.js' 
+      : './sw.js';
+    navigator.serviceWorker.register(swPath, {scope: location.pathname.replace(/\/[^\/]*$/, '/') || '/'})
+      .then(reg => console.log('SW registrato', reg.scope))
+      .catch(err => console.log('SW errore', err));
   });
 }
 
